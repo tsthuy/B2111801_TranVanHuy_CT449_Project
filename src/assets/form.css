@@ -34,3 +34,6 @@ label {
 .error-feedback {
     color: red;
 }
+.navbar {
+    position: fixed;
+}
