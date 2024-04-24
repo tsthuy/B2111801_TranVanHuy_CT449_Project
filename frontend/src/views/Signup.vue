@@ -11,6 +11,20 @@
       <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
         <form class="space-y-6" @submit.prevent="registerUser">
           <div>
+            <label for="msnv" class="block text-sm font-medium text-gray-700">
+              Admin Code
+            </label>
+            <div class="mt-1">
+              <input
+                v-model="msnv"
+                type="text"
+                autocomplete="msnv"
+                required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+          </div>
+          <div>
             <label for="name" class="block text-sm font-medium text-gray-700">
               Full Name
             </label>
@@ -24,22 +38,6 @@
               />
             </div>
           </div>
-
-          <div>
-            <label for="email" class="block text-sm font-medium text-gray-700">
-              Email address
-            </label>
-            <div class="mt-1">
-              <input
-                v-model="email"
-                type="email"
-                autocomplete="email"
-                required
-                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              />
-            </div>
-          </div>
-
           <div>
             <label
               for="password"
@@ -57,7 +55,51 @@
               />
             </div>
           </div>
-
+          <div>
+            <label
+              for="position"
+              class="block text-sm font-medium text-gray-700"
+            >
+              Position
+            </label>
+            <div class="mt-1">
+              <input
+                v-model="position"
+                type="text"
+                autocomplete="position"
+                required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">
+              Address
+            </label>
+            <div class="mt-1">
+              <input
+                v-model="address"
+                type="text"
+                autocomplete="address"
+                required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">
+              Phone
+            </label>
+            <div class="mt-1">
+              <input
+                v-model="phone"
+                type="text"
+                autocomplete="phone"
+                required
+                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              />
+            </div>
+          </div>
           <div>
             <button
               type="submit"
@@ -79,37 +121,40 @@
 </template>
 
 <script>
+import axios from "axios";
+import { server } from "../../server";
+
 export default {
   data() {
     return {
+      msnv: "",
+      position: "",
       name: "",
-      email: "",
       password: "",
+      address: "",
+      phone: "",
     };
   },
   methods: {
-    registerUser() {
-      // Gửi dữ liệu đăng ký người dùng đến máy chủ
-      // Sử dụng Axios hoặc Fetch API để thực hiện yêu cầu POST
-      // Ví dụ:
-      // axios.post('sign-up.php', {
-      //   name: this.name,
-      //   email: this.email,
-      //   password: this.password
-      // })
-      // .then(response => {
-      //   // Xử lý phản hồi từ máy chủ
-      //   console.log(response.data);
-      // })
-      // .catch(error => {
-      //   // Xử lý lỗi nếu có
-      //   console.error(error);
-      // });
+    async registerUser() {
+      try {
+        const response = await axios.post(`${server}/admin/create-admin`, {
+          msnv: this.msnv,
+          position: this.position,
+          name: this.name,
+          password: this.password,
+          address: this.address,
+          phone: this.phone,
+        });
+        // Xử lý phản hồi từ máy chủ
+        console.log(response.data);
+        // Điều hướng đến trang sau khi đăng ký thành công
+        this.$router.push("/login"); // Điều hướng đến trang đăng nhập
+      } catch (error) {
+        // Xử lý lỗi nếu có
+        console.error(error.response.data);
+      }
     },
   },
 };
 </script>
-
-<style>
-/* Thêm CSS tùy chỉnh nếu cần */
-</style>

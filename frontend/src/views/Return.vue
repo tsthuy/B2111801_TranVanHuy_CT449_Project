@@ -2,7 +2,7 @@
   <div>
     <div class="container mx-auto py-8 p-2">
       <h2 class="text-2xl font-semibold mb-4 text-center">Trả Sách</h2>
-      <div class="bg-white p-4 shadow rounded border-2 border-indigo-600 p-2">
+      <div class="bg-white shadow rounded border-2 border-indigo-600 p-2">
         <form @submit.prevent="returnBook" enctype="multipart/form-data">
           <div class="mb-4">
             <label
