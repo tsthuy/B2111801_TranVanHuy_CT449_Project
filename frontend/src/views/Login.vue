@@ -84,6 +84,8 @@
 </template>
 
 <script>
+import axios from "axios";
+import { server } from "../../server";
 export default {
   data() {
     return {
@@ -92,22 +94,24 @@ export default {
     };
   },
   methods: {
-    loginUser() {
-      // Gửi dữ liệu đăng nhập đến máy chủ
-      // Sử dụng Axios hoặc Fetch API để thực hiện yêu cầu POST
-      // Ví dụ:
-      // axios.post('login.php', {
-      //   email: this.email,
-      //   password: this.password
-      // })
-      // .then(response => {
-      //   // Xử lý phản hồi từ máy chủ
-      //   console.log(response.data);
-      // })
-      // .catch(error => {
-      //   // Xử lý lỗi nếu có
-      //   console.error(error);
-      // });
+    async loginUser() {
+      try {
+        const response = await axios.post(`${server}/admin/login-admin`, {
+          msnv: this.msnv,
+          password: this.password,
+        });
+        if (response.data && response.data.success) {
+          console.log("Login successful");
+          alert("Login successful");
+          this.$router.push("/");
+        } else {
+          console.log("Login failed");
+          alert("Login failed. Please check your credentials.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("An error occurred. Please try again later.");
+      }
     },
   },
 };

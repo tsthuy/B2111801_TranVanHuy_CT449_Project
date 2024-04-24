@@ -4,6 +4,8 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 
+import ToastPlugin from "vue-toast-notification";
+import "vue-toast-notification/dist/theme-bootstrap.css";
 // import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
@@ -19,7 +21,7 @@ import { dom } from "@fortawesome/fontawesome-svg-core";
 dom.watch();
 
 const app = createApp(App);
-
+app.use(ToastPlugin);
 app.component("font-awesome-icon", FontAwesomeIcon);
 
 createApp(App).use(router).mount("#app");
