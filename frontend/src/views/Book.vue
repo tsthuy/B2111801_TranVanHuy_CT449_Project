@@ -25,27 +25,31 @@
       <div class="overflow-x-auto">
         <table class="w-full table-auto">
           <thead>
-            <tr class="bg-gray-200">
-              <th class="px-4 py-2">Mã Sách</th>
-              <th class="px-4 py-2">Tên Sách</th>
-              <th class="px-4 py-2">Đơn Giá</th>
-              <th class="px-4 py-2">Số Quyển</th>
-              <th class="px-4 py-2">Năm Xuất Bản</th>
-              <th class="px-4 py-2">Mã Nhà Xuất Bản</th>
-              <th class="px-4 py-2">Mã Tác Giả</th>
-              <th class="px-4 py-2">Actions</th>
+            <tr class="bg-green-500">
+              <th class="px-4 py-2 border">Mã Sách</th>
+              <th class="px-4 py-2 border">Tên Sách</th>
+              <th class="px-4 py-2 border">Đơn Giá</th>
+              <th class="px-4 py-2 border">Số Quyển</th>
+              <th class="px-4 py-2 border">Năm Xuất Bản</th>
+              <th class="px-4 py-2 border">Mã Nhà Xuất Bản</th>
+              <th class="px-4 py-2 border">Mã Tác Giả</th>
+              <th class="px-4 py-2 border">Thể Loại</th>
+              <th class="px-4 py-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="book in searchResults" :key="book.bookCode">
-              <td class="border px-4 py-2">{{ book.bookCode }}</td>
-              <td class="border px-4 py-2">{{ book.bookName }}</td>
-              <td class="border px-4 py-2">{{ book.price }}</td>
-              <td class="border px-4 py-2">{{ book.numberBook }}</td>
-              <td class="border px-4 py-2">{{ book.yearPB }}</td>
-              <td class="border px-4 py-2">{{ book.NXBCode }}</td>
-              <td class="border px-4 py-2">{{ book.writer }}</td>
-              <td class="border px-4 py-2">
+              <td class="border px-4 py-2 text-center">{{ book.bookCode }}</td>
+              <td class="border px-4 py-2 text-center">{{ book.bookName }}</td>
+              <td class="border px-4 py-2 text-center">{{ book.price }}</td>
+              <td class="border px-4 py-2 text-center">
+                {{ book.numberBook }}
+              </td>
+              <td class="border px-4 py-2 text-center">{{ book.yearPB }}</td>
+              <td class="border px-4 py-2 text-center">{{ book.NXBCode }}</td>
+              <td class="border px-4 py-2 text-center">{{ book.writer }}</td>
+              <td class="border px-4 py-2 text-center">{{ book.type }}</td>
+              <td class="border px-4 py-2 text-center">
                 <a
                   :href="'book_manage.php?delete_id=' + book.bookCode"
                   @click.prevent="confirmDelete(book.bookCode)"
@@ -112,6 +116,12 @@
           placeholder="Mã Tác Giả"
           class="p-2 border rounded-md mr-2 text-black"
         />
+        <input
+          v-model="newBook.type"
+          type="text"
+          placeholder="Thể Loại"
+          class="p-2 border rounded-md mr-2 text-black"
+        />
         <button
           type="submit"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
@@ -140,6 +150,7 @@ export default {
         yearPB: "",
         NXBCode: "",
         writer: "",
+        type: "",
       },
       isLoggedIn: false,
     };
@@ -190,6 +201,7 @@ export default {
             yearPB: "",
             NXBCode: "",
             writer: "",
+            type: "",
           };
           // Refresh book list
           this.getBooks();
@@ -200,10 +212,32 @@ export default {
     },
     confirmDelete(bookId) {
       if (confirm("Are you sure?")) {
-        // Proceed with book deletion
-        // Redirect or send AJAX request to delete the book
+        try {
+          axios
+            .delete(`${server}/book/delete-book`, {
+              data: {
+                bookCode: bookId,
+              },
+            })
+            .then((response) => {
+              if (response.data.success) {
+                alert("Book deleted successfully");
+                this.getBooks();
+              }
+            })
+
+            .catch((error) => {
+              console.error(
+                "Error deleting book:",
+                error.response.data.message
+              );
+            });
+        } catch (error) {
+          console.error("Error deleting book:", error.message);
+        }
       }
     },
+
     logout() {
       // Handle logout
       // Redirect to logout page or send AJAX request to logout

@@ -15,9 +15,13 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 const admin = require("./controller/admin.js");
 const test = require("./controller/user.js");
 const book = require("./controller/book.js");
+const reader = require("./controller/reader.js");
+const borrow = require("./controller/borrow.js");
 app.use("/", test);
 app.use("/api/admin", admin);
 app.use("/api/book", book);
+app.use("/api/reader", reader);
+app.use("/api/borrow", borrow);
 app.use(ErrorHandler);
 
 module.exports = app;

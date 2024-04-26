@@ -86,6 +86,7 @@
 <script>
 import axios from "axios";
 import { server } from "../../server";
+import VueCookies from "vue-cookies";
 export default {
   data() {
     return {
@@ -102,6 +103,7 @@ export default {
         });
         if (response.data && response.data.success) {
           console.log("Login successful");
+          VueCookies.set("loggedIn", true);
           alert("Login successful");
           this.$router.push("/");
         } else {

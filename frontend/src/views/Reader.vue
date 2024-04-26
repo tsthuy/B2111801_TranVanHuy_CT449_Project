@@ -1,17 +1,17 @@
 <template>
-  <div class="container mt-5">
+  <div class="container mx-auto px-4 py-8">
     <h1 class="text-center mb-4 uppercase font-bold">
       Danh sách độc giả (Tổng số lượng độc giả: {{ totalReaders }})
     </h1>
 
     <div class="flex flex-wrap mb-3">
       <div class="w-full md:w-1/2">
-        <form @submit.prevent="searchReader" class="flex">
+        <form @submit.prevent="searchReaders" class="flex">
           <input
             v-model="keyword"
-            class="form-input mr-2"
+            class="form-input mr-2 border"
             type="search"
-            placeholder="Tìm kiếm"
+            placeholder="Tìm kiếm..."
             aria-label="Search"
           />
           <button
@@ -23,10 +23,14 @@
         </form>
       </div>
       <div class="w-full md:w-1/4">
-        <select v-model="sortBy" @change="sortReader" class="form-select">
-          <option value="TenDocGia">Sắp xếp theo Tên</option>
-          <option value="DiaChi">Sắp xếp theo Địa chỉ</option>
-          <option value="SoThe">Sắp xếp theo Số thẻ</option>
+        <select
+          v-model="sortBy"
+          @change="sortReader"
+          class="form-select border p-1"
+        >
+          <option value="fullName">Sắp xếp theo Tên</option>
+          <option value="address">Sắp xếp theo Địa chỉ</option>
+          <option value="readerCode">Sắp xếp theo Mã độc giả</option>
         </select>
       </div>
       <div class="w-full md:w-1/4">
@@ -42,53 +46,75 @@
     <div class="mt-4" v-show="showForm">
       <form @submit.prevent="addReader" class="mb-4">
         <div class="mb-4">
-          <label for="MaDocGia" class="block text-sm font-medium text-gray-700"
+          <label
+            for="readerCode"
+            class="block text-sm font-medium text-gray-700"
             >Mã độc giả:</label
           >
           <input
-            v-model="newReader.MaDocGia"
+            v-model="newReader.readerCode"
             type="text"
-            id="MaDocGia"
-            class="form-input mt-1"
+            id="readerCode"
+            class="form-input mt-1 border p-2 w-2/4"
             required
           />
         </div>
         <div class="mb-4">
-          <label for="TenDocGia" class="block text-sm font-medium text-gray-700"
+          <label for="fullName" class="block text-sm font-medium text-gray-700"
             >Tên độc giả:</label
           >
           <input
-            v-model="newReader.TenDocGia"
+            v-model="newReader.fullName"
             type="text"
-            id="TenDocGia"
-            class="form-input mt-1"
+            id="fullName"
+            class="form-input mt-1 border p-2 w-2/4"
             required
           />
         </div>
         <div class="mb-4">
-          <label for="DiaChi" class="block text-sm font-medium text-gray-700"
-            >Địa chỉ:</label
+          <label for="birthday" class="block text-sm font-medium text-gray-700"
+            >Ngày sinh:</label
           >
           <input
-            v-model="newReader.DiaChi"
-            type="text"
-            id="DiaChi"
-            class="form-input mt-1"
+            v-model="newReader.birthday"
+            type="date"
+            id="birthday"
+            class="form-input mt-1 border p-2 w-2/4"
           />
         </div>
         <div class="mb-4">
-          <label for="SoThe" class="block text-sm font-medium text-gray-700"
-            >Số thẻ:</label
+          <label for="gender" class="block text-sm font-medium text-gray-700"
+            >Giới tính:</label
           >
           <input
-            v-model="newReader.SoThe"
+            v-model="newReader.gender"
             type="text"
-            id="SoThe"
-            class="form-input mt-1"
-            @keyup="searchTheThuVien"
+            id="gender"
+            class="form-input mt-1 border p-2 w-2/4"
           />
         </div>
-        <div id="theThuVienResult"></div>
+        <div class="mb-4">
+          <label for="address" class="block text-sm font-medium text-gray-700"
+            >Địa chỉ:</label
+          >
+          <input
+            v-model="newReader.address"
+            type="text"
+            id="address"
+            class="form-input mt-1 border p-2 w-2/4"
+          />
+        </div>
+        <div class="mb-4">
+          <label for="phone" class="block text-sm font-medium text-gray-700"
+            >Số điện thoại:</label
+          >
+          <input
+            v-model="newReader.phone"
+            type="text"
+            id="phone"
+            class="form-input mt-1 border p-2 w-2/4"
+          />
+        </div>
         <button
           type="submit"
           class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
@@ -100,31 +126,37 @@
 
     <div class="table-responsive mt-4">
       <table class="table-auto w-full">
-        <thead class="bg-gray-800 text-white">
+        <thead class="bg-green-500">
           <tr>
-            <th class="px-4 py-2">Mã độc giả</th>
-            <th class="px-4 py-2">Tên độc giả</th>
-            <th class="px-4 py-2">Địa chỉ</th>
-            <th class="px-4 py-2">Số Thẻ</th>
-            <th class="px-4 py-2">Hành động</th>
+            <th class="px-4 py-2 border">Mã độc giả</th>
+            <th class="px-4 py-2 border">Tên độc giả</th>
+            <th class="px-4 py-2 border">Ngày sinh</th>
+            <th class="px-4 py-2 border">Giới tính</th>
+            <th class="px-4 py-2 border">Địa chỉ</th>
+            <th class="px-4 py-2 border">Số điện thoại</th>
+            <th class="px-4 py-2 border">Hành động</th>
           </tr>
         </thead>
         <tbody class="text-gray-700">
-          <tr v-for="reader in readers" :key="reader.MaDocGia">
-            <td class="border px-4 py-2">{{ reader.MaDocGia }}</td>
-            <td class="border px-4 py-2">{{ reader.TenDocGia }}</td>
-            <td class="border px-4 py-2">{{ reader.DiaChi }}</td>
-            <td class="border px-4 py-2">{{ reader.SoThe }}</td>
-            <td class="border px-4 py-2">
-              <button
-                @click="editReader(reader.MaDocGia)"
-                class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded-full"
+          <tr v-for="reader in readers" :key="reader.readerCode">
+            <td class="border px-4 py-2 text-center">
+              {{ reader.readerCode }}
+            </td>
+            <td class="border px-4 py-2 text-center">{{ reader.fullName }}</td>
+            <td class="border px-4 py-2 text-center">{{ reader.birthday }}</td>
+            <td class="border px-4 py-2 text-center">{{ reader.gender }}</td>
+            <td class="border px-4 py-2 text-center">{{ reader.address }}</td>
+            <td class="border px-4 py-2 text-center">{{ reader.phone }}</td>
+            <td class="border px-4 py-2 text-center">
+              <a
+                :href="'edit-reader?readerCode=' + reader.readerCode"
+                class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold p-2 rounded-lg mr-2"
               >
                 Sửa
-              </button>
+              </a>
               <button
-                @click="deleteReader(reader.MaDocGia)"
-                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-full"
+                @click="deleteReader(reader.readerCode)"
+                class="bg-red-500 hover:bg-red-700 text-white font-bold p-2 rounded-lg"
               >
                 Xoá
               </button>
@@ -137,54 +169,109 @@
 </template>
 
 <script>
+import { server } from "../../server";
+import axios from "axios";
+// Import các thư viện hoặc tùy chỉnh dữ liệu nếu cần
 export default {
   data() {
     return {
-      sortBy: "TenDocGia",
+      sortBy: "fullName",
+      totalReaders: "",
       keyword: "",
+      readers: [],
       showForm: false,
       newReader: {
-        MaDocGia: "",
-        TenDocGia: "",
-        DiaChi: "",
-        SoThe: "",
+        readerCode: "",
+        fullName: "",
+        birthday: "",
+        gender: "",
+        address: "",
+        phone: "",
       },
     };
   },
+  mounted() {
+    this.getReaders();
+  },
   methods: {
-    searchReader() {
-      // Xử lý tìm kiếm độc giả
-      // Sử dụng this.keyword để lấy từ khóa tìm kiếm
-      // Gửi yêu cầu AJAX hoặc thực hiện tìm kiếm trên mảng this.readers
+    async searchReaders() {
+      try {
+        if (!this.keyword.trim()) {
+          await this.getReaders();
+        } else {
+          const filteredReaders = this.readers.filter((reader) =>
+            reader.fullName.toLowerCase().includes(this.keyword.toLowerCase())
+          );
+          this.readers = filteredReaders;
+        }
+      } catch (error) {
+        console.error("Error searching readers:", error);
+      }
     },
-    sortReader() {
-      // Xử lý sắp xếp độc giả
-      // Sử dụng this.sortBy để lấy cách sắp xếp được chọn
-      // Gửi yêu cầu AJAX hoặc sắp xếp trực tiếp mảng this.readers
+    async sortReader() {
+      try {
+        const response = await axios.get(
+          `${server}/reader/sort-readers?sortBy=${this.sortBy}`
+        );
+        this.readers = response.data.readers;
+      } catch (error) {
+        console.error("Error sorting readers:", error);
+      }
     },
     showAddForm() {
-      this.showForm = true; // Hiển thị form thêm độc giả khi nhấn nút "Thêm độc giả"
+      this.showForm = !this.showForm;
     },
-    addReader() {
-      // Xử lý thêm độc giả
-      // Sử dụng this.newReader để lấy thông tin của độc giả mới
-      // Gửi yêu cầu AJAX hoặc thêm độc giả vào mảng this.readers
+    async addReader() {
+      try {
+        const response = await axios.post(
+          `${server}/reader/create-reader`,
+          this.newReader
+        );
+        if (response.data.success) {
+          alert("Added reader!");
+          this.newReader = {
+            readerCode: "",
+            fullName: "",
+            birthday: "",
+            gender: "",
+            address: "",
+            phone: "",
+          };
+          // Refresh reader list
+          this.getReaders();
+        }
+      } catch (error) {
+        console.error("Error adding reader:", error);
+      }
     },
-    editReader(id) {
-      // Xử lý sửa độc giả
-      // Sử dụng id để xác định độc giả cần sửa
-      // Chuyển hướng đến trang sửa độc giả hoặc hiển thị form sửa tùy thuộc vào thiết kế ứng dụng của bạn
+
+    async deleteReader(id) {
+      try {
+        const readerCode = id;
+        const response = await axios.delete(
+          `${server}/reader/delete-reader/${readerCode}`
+        );
+        if (response.data.success) {
+          alert("Reader deleted successfully");
+          this.getReaders();
+        }
+      } catch (error) {
+        console.error("Error deleting reader:", error);
+      }
     },
-    deleteReader(id) {
-      // Xử lý xoá độc giả
-      // Sử dụng id để xác định độc giả cần xoá
-      // Gửi yêu cầu AJAX hoặc xoá trực tiếp khỏi mảng this.readers
-    },
-    searchTheThuVien(soThe) {
-      // Xử lý tìm kiếm mã thẻ thư viện
-      // Sử dụng soThe để tìm kiếm
-      // Gửi yêu cầu AJAX để tìm kiếm mã thẻ và hiển thị kết quả
+    async getReaders() {
+      try {
+        const response = await axios.get(`${server}/reader/get-readers`);
+        this.readers = response.data.readers;
+        this.totalReaders = response.data.totalReaders;
+      } catch (error) {
+        console.error("Error fetching readers:", error);
+      }
     },
   },
 };
 </script>
+
+<style>
+/* Các kiểu tùy chỉnh của bạn */
+</style>

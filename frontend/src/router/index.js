@@ -63,6 +63,16 @@ const routes = [
     name: "reader_card",
     component: () => import("@/views/ReaderCard.vue"),
   },
+  {
+    path: "/edit-book",
+    name: "editBook",
+    component: () => import("@/views/EditBook.vue"),
+  },
+  {
+    path: "/edit-reader",
+    name: "EditReader",
+    component: () => import("@/views/EditReader.vue"),
+  },
 ];
 
 const router = createRouter({

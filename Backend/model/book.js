@@ -28,6 +28,10 @@ const bookSchema = new mongoose.Schema({
     type: String,
     require: [true, "Please enter your writer"],
   },
+  type: {
+    type: String,
+    require: [true, "Please enter your type"],
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
